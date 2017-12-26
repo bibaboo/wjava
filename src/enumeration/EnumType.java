@@ -1,5 +1,8 @@
 package enumeration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum EnumType {
 
 	ONE(1, "하나"),
@@ -26,6 +29,15 @@ public enum EnumType {
 			}
 		}
 		throw new IllegalArgumentException("EnumType value setting error >> Invalid enum. "); // TODO: excpetion
+	}
+	
+	public static List<Code<Integer>> toList(){
+		List<Code<Integer>> list = new ArrayList<Code<Integer>>();
+		
+		for(EnumType v : values()) {
+			list.add(new Code<Integer>(v.getCode(), v.getCodeName()));
+		}
+		return list;
 	}
 	
 	public Integer getCode(){

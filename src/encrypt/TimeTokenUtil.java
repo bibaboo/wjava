@@ -6,41 +6,43 @@ import java.util.Date;
 
 public class TimeTokenUtil {
 	
-	public static final Boolean IS_PRINT = false;
-	public static final long rndNum = 131313;
+	public static final Boolean IS_PRINT = true;
+	public static final long rndNum = 13131313;
+	public static final int ALLOW_MINUTE = 1;
 	
     //Encoder
-	public static String encoder()
-    {
-    	return encoder(System.currentTimeMillis());
+	public static String encode(){
+    	return encode(System.currentTimeMillis());
     }
 	
-    public static String encoder(long mm)
-    {
+    public static String encode(long mm){
     	long rnd1 = (long) (Math.random() * 8) + 2;
     	long rnd2 = (long) (Math.random() * 8) + 2;
     	long enc = (mm * rnd1) + (rndNum*rnd2);
-    	
-    	print("=== EncryptUtil.encoder ===\nmm : " + mm + "\nrnd1 : " + rnd1 + "\nrnd2 : " + rnd2 + "\nenc : " + enc);
-    	return String.valueOf(enc) + String.valueOf(rnd1) + String.valueOf(rnd2);
+    	String rtn = String.valueOf(enc) + String.valueOf(rnd1) + String.valueOf(rnd2);
+    	print("=== EncryptUtil.encode ===\nmm : " + mm + "\nrnd1 : " + rnd1 + "\nrnd2 : " + rnd2 + "\nenc : " + enc + "\nrtn : " + rtn + "\n==========================");
+    	return rtn;
     }
 
     //Decoder
-    public static long decoder(String enc)
-    {
-    	int len = enc.length(); 
-    	long rnd1 = Long.parseLong(enc.substring(len-2, len-1));
-    	long rnd2 = Long.parseLong(enc.substring(len-1));
-    	long mm = Long.parseLong(enc.substring(0, enc.length()-2));
-    	long dec = (mm-(rndNum*rnd2))/rnd1 ;
+    public static long decode(String rtn){
+    	int len = rtn.length(); 
+    	long rnd1 = Long.parseLong(rtn.substring(len-2, len-1));
+    	long rnd2 = Long.parseLong(rtn.substring(len-1));
+    	long enc = Long.parseLong(rtn.substring(0, rtn.length()-2));
+    	long mm = (enc-(rndNum*rnd2))/rnd1 ;
     	
-    	print("=== EncryptUtil.decoder ===\nenc : " + enc + "\nmm : " + mm + "\nrnd1 : " + rnd1 + "\nrnd2 : " + rnd2 + "\ndec : " + dec);
-    	return dec;
+    	print("=== EncryptUtil.decode ===\nrtn : " + rtn + "\nrnd1 : " + rnd1 + "\nrnd2 : " + rnd2 + "\nenc : " + enc + "\nmm : " + mm + "\n==========================");
+    	return mm;
     }
+    
+    public static Boolean validate(String enc) {
+    	return validate(enc, ALLOW_MINUTE);
+	}
     
     public static Boolean validate(String enc, int allowMinute) {
     	try{
-    		Long reqMM = TimeTokenUtil.decoder(enc);
+    		Long reqMM = TimeTokenUtil.decode(enc);
     		
     		Calendar fromC = Calendar.getInstance();
 			fromC.setTime(new Date());
@@ -55,7 +57,7 @@ public class TimeTokenUtil {
 			if(IS_PRINT){
 				Calendar reqC = Calendar.getInstance();
 				reqC.setTimeInMillis(reqMM);
-				print("=== EncryptUtil.validate ===\nallowMinute : " + allowMinute + "\nfromC : " + format(fromC) + "\nreqC : " + format(reqC) + "\ntoC : " + format(toC) + "\nresult : " + result);
+				print("=== EncryptUtil.validate ===\nallowMinute : " + allowMinute + "\nfromC : " + format(fromC) + "\nreqC : " + format(reqC) + "\ntoC : " + format(toC) + "\nresult : " + result + "\n============================");
 			}
     		
     		return result;

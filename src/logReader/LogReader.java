@@ -17,9 +17,10 @@ public class LogReader implements ProcessFile {
 	private final LinkedList<String> list = new LinkedList<String>();
 	private String target;
 	private String logLevel = "E/DeviceON";
+	//private String logLevel = "";
 	public String collection[][] = { 
-		{"push", "[전송] PUSH 받음!", "[정보] 최근 CommandId", "[정보] gateZoneId"},
-		{"network", "[상태] Network Status :"}
+		{"kiosk", "ExternalKiosk", "deviceon", "[정보] gateZoneId"},
+		{"default", "PUSH 받음", "최근", "Gate In", "Gate Out", "현재 적용되있는 위치기반 정책", "System Camera", "SSE MDM Camera With WhiteList", "블루투스"}
 	};
 
 
@@ -65,8 +66,7 @@ public class LogReader implements ProcessFile {
 	}
 	
 	public void validate(String line, int num){
-		
-		if(line.indexOf(logLevel)>-1){
+		if("".equals(logLevel) || line.indexOf(logLevel)>-1){
 			if(hasTargets(line, num)){
 				this.list.add(line.replace(logLevel, logLevel + " line : " + pad(String.valueOf(num)) + " "));
 			}
