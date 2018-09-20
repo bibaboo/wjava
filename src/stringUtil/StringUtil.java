@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class StringUtil {
 
@@ -13,15 +15,9 @@ public final class StringUtil {
 		throw new AssertionError();
 	}
 	
-	/**
-	 * 문자열의 Empty or Null 체크
-	 * 
-	 * @param str
-	 * @return
-	 */
-	public static boolean isEmpty(String str) {
-		return (str == null || str.trim().equals(""));
-	}
+	//####################################################################################
+	// manipulate 
+	//####################################################################################
 	
 	/**
 	 * 문자열의 Null 값 치환
@@ -33,12 +29,93 @@ public final class StringUtil {
 	public static String nvl(String str) {
 		return nvl(str, "");
 	}
+	
 	public static String nvl(String str, String replacer) {
 		if (str == null) {
 			return replacer;
 		} else {
 			return str;
 		}
+	}
+	
+	/**
+	 * lpad 함수 : str의 왼쪽에 주어진 길이만큼 addStr로 채운다
+	 * 
+	 * @param str 대상문자열
+	 * @param len 길이
+	 * @param addStr 대체문자
+	 * @return 문자열
+	 */
+
+	public static String lpad(String str, int len, String addStr) {
+		String result = str;
+		int templen = len - result.length();
+
+		for (int i = 0; i < templen; i++) {
+			result = addStr + result;
+		}
+
+		return result;
+	}
+	
+	/**
+	 * 문자열을 치환함
+	 * 
+	 * @param str
+	 * @param sourceStr
+	 * @param targetStr
+	 * @return
+	 */
+	public static String replace(String value, String sourceStr, String targetStr) {
+
+		String str = value;
+		if (str == null || sourceStr == null || targetStr == null || str.length() == 0 || sourceStr.length() == 0) {
+			return str;
+		}
+
+		int position = 0;
+		int sourceStrLength = sourceStr.length();
+		int targetStrLength = targetStr.length();
+
+		while (true) {
+			position = str.indexOf(sourceStr, position);
+			if (position != -1) {
+				if ((position + sourceStrLength) < str.length()) {
+					str = str.substring(0, position) + targetStr + str.substring(position + sourceStrLength);
+				} else {
+					str = str.substring(0, position) + targetStr;
+				}
+
+				position = position + targetStrLength;
+
+				if (position > str.length()) {
+					position = str.length();
+				}
+			} else {
+				break;
+			}
+		}
+
+		return str;
+	}
+	
+	/**
+	 * 문자열 치환
+	 * 
+	 * @param value
+	 * @return
+	 */
+	public static String replaceContentString2(String value) {
+		String str = value;
+		if (str != null && str.length() > 0) {
+			str = replace(str, "&amp;", "&");
+			str = replace(str, "\"", "&quot;");
+			str = replace(str, "&", "&amp;");
+			str = replace(str, "<", "&lt;");
+			str = replace(str, ">", "&gt;");
+		}
+
+		return str;
 	}
 	
 	/**
@@ -215,6 +292,24 @@ public final class StringUtil {
 
 		return res.toString();
 	}
+	
+	//####################################################################################
+	// validation 
+	//####################################################################################
+	
+	/**
+	 * 문자열의 Empty or Null 체크
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public static boolean isEmpty(String str) {
+		return (str == null || str.trim().equals(""));
+	}
+	
+	//####################################################################################
+	// conversion 
+	//####################################################################################
 
 	/**
 	 * 8859-1을 utf-8로 바꾼다.
@@ -249,86 +344,6 @@ public final class StringUtil {
 			}
 		} catch (UnsupportedEncodingException e) {
 			return "ENCORDING ERROR";
-		}
-
-		return str;
-	}
-
-	/**
-	 * lpad 함수 : str의 왼쪽에 주어진 길이만큼 addStr로 채운다
-	 * 
-	 * @param str 대상문자열
-	 * @param len 길이
-	 * @param addStr 대체문자
-	 * @return 문자열
-	 */
-
-	public static String lpad(String str, int len, String addStr) {
-		String result = str;
-		int templen = len - result.length();
-
-		for (int i = 0; i < templen; i++) {
-			result = addStr + result;
-		}
-
-		return result;
-	}
-
-	/**
-	 * 문자열을 치환함
-	 * 
-	 * @param str
-	 * @param sourceStr
-	 * @param targetStr
-	 * @return
-	 */
-	public static String replace(String value, String sourceStr, String targetStr) {
-
-		String str = value;
-		if (str == null || sourceStr == null || targetStr == null || str.length() == 0 || sourceStr.length() == 0) {
-			return str;
-		}
-
-		int position = 0;
-		int sourceStrLength = sourceStr.length();
-		int targetStrLength = targetStr.length();
-
-		while (true) {
-			position = str.indexOf(sourceStr, position);
-			if (position != -1) {
-				if ((position + sourceStrLength) < str.length()) {
-					str = str.substring(0, position) + targetStr + str.substring(position + sourceStrLength);
-				} else {
-					str = str.substring(0, position) + targetStr;
-				}
-
-				position = position + targetStrLength;
-
-				if (position > str.length()) {
-					position = str.length();
-				}
-			} else {
-				break;
-			}
-		}
-
-		return str;
-	}
-	
-	/**
-	 * 문자열 치환
-	 * 
-	 * @param value
-	 * @return
-	 */
-	public static String replaceContentString2(String value) {
-		String str = value;
-		if (str != null && str.length() > 0) {
-			str = replace(str, "&amp;", "&");
-			str = replace(str, "\"", "&quot;");
-			str = replace(str, "&", "&amp;");
-			str = replace(str, "<", "&lt;");
-			str = replace(str, ">", "&gt;");
 		}
 
 		return str;
@@ -371,6 +386,22 @@ public final class StringUtil {
 		}
 
 		return list;
+	}
+	
+	/**
+	 * List를 받아서 String 형태로 리턴함.
+	 * 
+	 * @param aList
+	 * @return
+	 */
+	public static <E> String List2String(List<E> aList){
+		StringBuffer message = new StringBuffer();
+
+		for(E item : aList){
+			message.append((message.length() == 0 ? "" : ", ") + item.toString());
+		}
+
+		return String.format("[%s]", message.toString());
 	}
 
 	/**
@@ -455,4 +486,28 @@ public final class StringUtil {
 		return extractText;
 
 	}
+	
+	//특수문자 제거 하기
+	public static String StringReplace(String str){      
+		String match = "[^\uAC00-\uD7A3xfe0-9a-zA-Z\\s]";
+		str =str.replaceAll(match, " ");
+		return str;
+	}
+	 
+	//이메일 유효성
+	public static boolean isEmailPattern(String email){
+		Pattern pattern=Pattern.compile("\\w+[@]\\w+\\.\\w+");
+		Matcher match=pattern.matcher(email);
+		return match.find();
+	}
+
+	//연속 스페이스 제거
+	public static String continueSpaceRemove(String str){
+	    String match2 = "\\s{2,}";
+	    str = str.replaceAll(match2, " ");
+	    return str;
+	}
+	
+	
+	
 }
