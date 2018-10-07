@@ -1,6 +1,6 @@
 package encrypt;
 
-import base62.Base62Util;
+import base62.Base62Utils;
 
 public class EncryptMain {
 
@@ -8,11 +8,11 @@ public class EncryptMain {
 		
 		long mm = System.currentTimeMillis()-(1000*60);
 		
-		String enc = TimeTokenUtil.encode();
+		String enc = TimeTokenUtils.encode();
 		
-		System.out.println("Base62 : " + Base62Util.encodeToLong(Long.parseLong(enc)));
+		System.out.println("Base62 : " + Base62Utils.encodeToLong(Long.parseLong(enc)));
 			
-		System.out.print("result : " + TimeTokenUtil.validate(enc));
+		System.out.print("result : " + TimeTokenUtils.validate(enc));
 	}
 	
 }

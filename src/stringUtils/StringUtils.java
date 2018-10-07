@@ -1,4 +1,4 @@
-package stringUtil;
+package stringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
@@ -9,9 +9,9 @@ import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public final class StringUtil {
+public final class StringUtils {
 
-	private StringUtil() {
+	private StringUtils() {
 		throw new AssertionError();
 	}
 	
@@ -477,7 +477,7 @@ public final class StringUtil {
 	 * @return the string
 	 */
 	public static String extractTextFormHTML(String html) {
-		if (StringUtil.isEmpty(html)) {
+		if (StringUtils.isEmpty(html)) {
 			return "";
 		}
 

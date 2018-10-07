@@ -1,7 +1,7 @@
-package stringUtil;
+package stringUtils;
 ;
 
-public class StringUtilMain {
+public class StringUtilsMain {
 
 	public static void main(String[] args) {
 		

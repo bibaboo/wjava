@@ -1,11 +1,11 @@
-package dateUtil;
+package dateUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public final class DateUtil {
+public final class DateUtils {
 	
-	private DateUtil() {
+	private DateUtils() {
 		throw new AssertionError();
 	}
 	

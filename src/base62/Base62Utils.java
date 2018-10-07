@@ -1,5 +1,5 @@
 package base62;
-public class Base62Util {
+public class Base62Utils {
 	
 	/**
      * Base62 Character Table

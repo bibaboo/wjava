@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class TimeTokenUtil {
+public class TimeTokenUtils {
 	
 	public static final Boolean IS_PRINT = true;
 	public static final long rndNum = 13131313;
@@ -42,7 +42,7 @@ public class TimeTokenUtil {
     
     public static Boolean validate(String enc, int allowMinute) {
     	try{
-    		Long reqMM = TimeTokenUtil.decode(enc);
+    		Long reqMM = TimeTokenUtils.decode(enc);
     		
     		Calendar fromC = Calendar.getInstance();
 			fromC.setTime(new Date());
