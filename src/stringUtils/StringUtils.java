@@ -1,9 +1,11 @@
 package stringUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
@@ -24,7 +26,7 @@ public final class StringUtils {
 	 * 
 	 * @param str
 	 * @param replacer
-	 * @return
+	 * @return String
 	 */
 	public static String nvl(String str) {
 		return nvl(str, "");
@@ -39,12 +41,12 @@ public final class StringUtils {
 	}
 	
 	/**
-	 * lpad 함수 : str의 왼쪽에 주어진 길이만큼 addStr로 채운다
+	 * str의 왼쪽에 주어진 길이만큼 addStr로 채운다
 	 * 
 	 * @param str 대상문자열
 	 * @param len 길이
 	 * @param addStr 대체문자
-	 * @return 문자열
+	 * @return String
 	 */
 
 	public static String lpad(String str, int len, String addStr) {
@@ -64,7 +66,7 @@ public final class StringUtils {
 	 * @param str
 	 * @param sourceStr
 	 * @param targetStr
-	 * @return
+	 * @return String
 	 */
 	public static String replace(String value, String sourceStr, String targetStr) {
 
@@ -103,7 +105,7 @@ public final class StringUtils {
 	 * 문자열 치환
 	 * 
 	 * @param value
-	 * @return
+	 * @return String
 	 */
 	public static String replaceContentString2(String value) {
 		String str = value;
@@ -293,24 +295,6 @@ public final class StringUtils {
 		return res.toString();
 	}
 	
-	//####################################################################################
-	// validation 
-	//####################################################################################
-	
-	/**
-	 * 문자열의 Empty or Null 체크
-	 * 
-	 * @param str
-	 * @return
-	 */
-	public static boolean isEmpty(String str) {
-		return (str == null || str.trim().equals(""));
-	}
-	
-	//####################################################################################
-	// conversion 
-	//####################################################################################
-
 	/**
 	 * 8859-1을 utf-8로 바꾼다.
 	 * 
@@ -494,19 +478,44 @@ public final class StringUtils {
 		return str;
 	}
 	 
-	//이메일 유효성
-	public static boolean isEmailPattern(String email){
-		Pattern pattern=Pattern.compile("\\w+[@]\\w+\\.\\w+");
-		Matcher match=pattern.matcher(email);
-		return match.find();
-	}
-
 	//연속 스페이스 제거
 	public static String continueSpaceRemove(String str){
 	    String match2 = "\\s{2,}";
 	    str = str.replaceAll(match2, " ");
 	    return str;
 	}
+	
+	
+	//####################################################################################
+	// validation 
+	//####################################################################################
+	
+	/**
+	 * 문자열의 Empty or Null 체크
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public static boolean isEmpty(Object obj){
+        if( obj instanceof String ) return obj==null || "".equals(obj.toString().trim());
+        else if( obj instanceof List ) return obj==null || ((List)obj).isEmpty();
+        else if( obj instanceof Map ) return obj==null || ((Map)obj).isEmpty();
+        else if( obj instanceof Object[] ) return obj==null || Array.getLength(obj)==0;
+        else return obj==null;
+    }
+     
+    public static boolean isNotEmpty(Object obj){
+        return !isEmpty(obj);
+    }
+	
+    
+    //이메일 유효성
+  	public static boolean isEmailPattern(String email){
+  		Pattern pattern=Pattern.compile("\\w+[@]\\w+\\.\\w+");
+  		Matcher match=pattern.matcher(email);
+  		return match.find();
+  	}
+
 	
 	
 	
