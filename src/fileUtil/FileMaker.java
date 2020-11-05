@@ -8,7 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-
+import java.nio.file.Files;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,48 +19,65 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 public class FileMaker {
-
-	public static String rootPath = "D:/mdmProject/04.develop4/temp/";		
-	public static String originU = "Administrator";
-	public static String originS = "administrator";
 	
-	public static String targetU = "DeviceSubscription"; 
-	public static String targetS = "deviceSubscription";
+	public class Origin {
+		public static final String rootPath= "D:\\99.temp\\";
+		public static final String folderName= "report";
+	}
+	
+	public class Target {
+		public static final String rootPath= "D:\\99.temp2\\";
+		public static final String folderName= "target";
+	}
+	
+	public static final String ReplaceStrings[][] = {
+		{"report", "target"},
+		{"Report", "Target"},
+		{"com.lgcns.mxps.console", "com.lgcns.mxps.test"}
+	};
 	
 	public static void main(String[] args) {
-		
 		try {
-			
-			File oFolder = new File(rootPath + originS);
-			File sFolder = new File(rootPath + targetS);
-			File[] fileList = oFolder.listFiles();
+			File originFolder = new File(Origin.rootPath + Origin.folderName);
+			File targetFolder = new File(Target.rootPath + Target.folderName);
+			File[] fileList = originFolder.listFiles();
 
-			if(!sFolder.exists()){
-				sFolder.mkdirs();
+			if(!targetFolder.exists()){
+				targetFolder.mkdirs();
 	        }
 			
-			for (File file : fileList) {
-				if (file.isFile()) {
-					contentConverter(file, new File(rootPath + targetS + "/" + file.getName().replace(originU, targetU).replace(originS, targetS)));
-				}
-			}
+			checkFileList(fileList);
 
-			System.out.println(targetU + " Package done !!");
         } catch ( Exception e ) {
             e.printStackTrace( );
-            System.out.println(targetU + " Package fail !!");
+            System.out.println("FileMaker fail !!");
         }
+	}
+	
+	public static void checkFileList(File[] fileList) {
+		for (File file : fileList) {
+			if(file.isDirectory()) {
+				File pathFolder = new File(file.getAbsolutePath().replace(Origin.rootPath + Origin.folderName, Target.rootPath + Target.folderName));
+				if(!pathFolder.exists()){
+					pathFolder.mkdirs();
+		        }
+
+				checkFileList(file.listFiles());
+			}else if (file.isFile()) {
+				String path = file.getParent().replace(Origin.rootPath + Origin.folderName, Target.rootPath + Target.folderName);
+				String repalceFileName = file.getName().replace(Origin.folderName, Target.folderName).replace(capitalize(Origin.folderName), capitalize(Target.folderName));
+				contentConverter(file, new File(path + "\\" + repalceFileName));
+				System.out.println(file.getAbsolutePath() + " => " + path + "\\" + repalceFileName);
+			}
+		}
 	}
 	
 	
 	public static void contentConverter(File inputFile, File outputFile){
-	
 		FileInputStream fileInputStream = null;
 		BufferedReader bufferedReader = null;
 		FileOutputStream fileOutputStream = null;
 		BufferedWriter bufferedWriter = null;
-
-		boolean result = false;
 
 		try {
 		   // 생성
@@ -69,26 +86,20 @@ public class FileMaker {
 		   bufferedReader = new BufferedReader(new InputStreamReader(fileInputStream));
 		   bufferedWriter = new BufferedWriter(new OutputStreamWriter(fileOutputStream));
 
-		   // 원본 파일에서 읽어 들이는 한라인
 		   String line;
-		   // 패턴에 일치하는 문자로 대체하고 난 후의 string
-		   String repLine;
+		   String repLine="";
 
-		   // 원본 파일에서 한라인씩 읽는다.
 		   while ((line = bufferedReader.readLine()) != null) {
-			   // 일치하는 패턴에서는 바꿀 문자로 변환
-			   repLine = line.replace(originU, targetU).replace(originS, targetS);
-
-			   // 새로운 파일에 쓴다.
+			   repLine = line;
+			   for (int i = 0; i < ReplaceStrings.length; i++){
+				   repLine = repLine.replaceAll(ReplaceStrings[i][0], ReplaceStrings[i][1]);
+			   }
 			   bufferedWriter.write(repLine, 0, repLine.length());
 			   bufferedWriter.newLine();
 		   	}
-
-		   	result = true;
 		} catch (IOException ex) {
 			  ex.printStackTrace();
 		} finally {
-		  // 리소스 해제. 개별적으로 해제한다.
 		  try {
 			  bufferedReader.close();
 		  } catch (IOException ex1) {
@@ -100,6 +111,10 @@ public class FileMaker {
 			  ex2.printStackTrace();
 		  }
 	  }
+	}
+	
+	public static String capitalize(final String line) {
+	   return Character.toUpperCase(line.charAt(0)) + line.substring(1);
 	}
 }
 

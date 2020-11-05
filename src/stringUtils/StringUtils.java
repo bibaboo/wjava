@@ -2,6 +2,7 @@ package stringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
@@ -387,6 +388,28 @@ public final class StringUtils {
 
 		return String.format("[%s]", message.toString());
 	}
+	
+	public static String toString(Object object){
+        Field []fields = object.getClass().getDeclaredFields();
+        StringBuffer sb = new StringBuffer();
+        sb.append("{");
+        for(Field field : fields){
+            field.setAccessible(true);
+            try {
+                String type = field.getType().toString().substring(field.getType().toString().lastIndexOf(".") + 1);
+                if(field.getType().toString().startsWith("class ") && !field.getType().toString().startsWith("class java.lang.")){
+                   sb.append("\n\t" + type + " " + field.getName() + toString(field.get(object)));
+                }else{
+                	sb.append("\n\t" + type + " " + field.getName() + ":" + field.get(object));   
+                }
+            } catch (IllegalArgumentException e) {
+            } catch (IllegalAccessException e) {
+            }
+        }
+        sb.append("\n}");
+        return sb.toString();
+    }
+
 
 	/**
 	 * 파일 확장자를 리턴함

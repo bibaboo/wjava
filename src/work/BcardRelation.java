@@ -15,7 +15,7 @@ public class BcardRelation {
 		this.relationBusinesscardId = relationBusinesscardId;
 		this.relation = relation;
 	}
-	
+
 	
 	private String businesscardId;	
 	private String relationBusinesscardId;

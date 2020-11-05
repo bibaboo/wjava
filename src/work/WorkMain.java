@@ -48,7 +48,7 @@ public class WorkMain {
 		
 		
 		
-		List<BcardRelation> bcardRelationList = ut.calBcardRelation(businnesscardId, bcardRelationItemList, bcardRelationLinkList);
+		List<BcardRelation> bcardRelationList = ut.calBcardRelationExtend(businnesscardId, bcardRelationItemList, bcardRelationLinkList);
 		
 		int i = 0;
 		for(BcardRelation item :bcardRelationList) {
