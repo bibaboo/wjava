@@ -538,8 +538,28 @@ public final class StringUtils {
   		Matcher match=pattern.matcher(email);
   		return match.find();
   	}
+  	
+  	
+  	
+  	public static boolean hasString(String[] source, String search){
+  		for(String item : source){
+            if(item.contains(search)) return true;
+        }
+  		
+        return false;
+    }
+  	
+  	public static boolean hasString(String source, String[] search){
+  		for(String item : search){
+            if(source.contains(item)) return true;
+        }
+  		
+        return false;
+    }
 
-	
+  	public static boolean hasString(String source, String search){
+        return source.contains(search);
+    }
 	
 	
 }
